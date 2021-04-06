@@ -9,15 +9,15 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "qrlib",
-    version = "1.0.0",
+    name = "style-qrlib",
+    version = "1.1.0",
     author = "Yash Singhal",
     author_email = "yashsinghal0316@gmail.com",
     description = ("QR Image and PDF generation library"),
     license = "Propietary",
     keywords = "qr library qrlib ideal",
     url = "https://github.com/yashsinghal/qrlib",
-    packages=['qrlib', 'qrlib.lib', 'qrlib.fonts', 
+    packages=['qrlib', 'qrlib.lib', 'qrlib.fonts',
               'qrlib.tests'],
     long_description=read('README.rst'),
     classifiers=[
