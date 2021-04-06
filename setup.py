@@ -9,7 +9,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "style_qrlib",
+    name = "qrlib",
     version = "1.1.0",
     author = "Yash Singhal",
     author_email = "yashsinghal0316@gmail.com",
@@ -17,15 +17,15 @@ setup(
     license = "Propietary",
     keywords = "qr library qrlib ideal",
     url = "https://github.com/yashsinghal/qrlib",
-    packages=['style_qrlib', 'style_qrlib.lib', 'style_qrlib.fonts',
-              'style_qrlib.tests'],
+    packages=['qrlib', 'qrlib.lib', 'qrlib.fonts',
+              'qrlib.tests'],
     long_description=read('README.rst'),
     classifiers=[
         "Development Status :: 1 - Stable",
         "Topic :: Utilities",
         ],
-    package_dir={'style_qrlib': 'qrlib'},
-    package_data={'style_qrlib': ['static/*']},
+    package_dir={'qrlib': 'qrlib'},
+    package_data={'qrlib': ['static/*']},
     install_requires=['Pillow>=1.1.7', 'unittest2>=0.5.1', 'pyzbar>=0.1.8',
                       'CairoSVG>=0.4.4']
     )
