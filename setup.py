@@ -26,7 +26,7 @@ setup(
         ],
     package_dir={'qrlib': 'qrlib'},
     package_data={'qrlib': ['static/images/*',
-                            'static/**/*.svg']},
+                            'static/**/**/*.svg']},
     install_requires=['Pillow>=1.1.7', 'unittest2>=0.5.1', 'pyzbar>=0.1.8',
                       'CairoSVG>=0.4.4']
     )
