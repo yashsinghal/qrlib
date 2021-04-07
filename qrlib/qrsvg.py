@@ -1,13 +1,13 @@
 # coding: utf-8
 # (c) Copyright 2012 by Miguel Paolino <mpaolino@ideal.com.uy>
-from lib import pyqrcode
+from .lib import pyqrcode
 from xml.etree import cElementTree as et
-from config import (BLOCK_SIZE, BASIC_SHAPES, SHAPE_GROUP, STYLE_FILES,
-                    QUIET_ZONE, EYE_STYLE_FILES, STYLES_DIR, EYE_STYLES_DIR)
-from validation import (color_validation, ec_level_validation,
-                        size_validation, style_validation,
-                        inner_eye_style_validation,
-                        outer_eye_style_validation)
+from .config import (BLOCK_SIZE, BASIC_SHAPES, SHAPE_GROUP, STYLE_FILES,
+                     QUIET_ZONE, EYE_STYLE_FILES, STYLES_DIR, EYE_STYLES_DIR)
+from .validation import (color_validation, ec_level_validation,
+                         size_validation, style_validation,
+                         inner_eye_style_validation,
+                         outer_eye_style_validation)
 
 from os.path import join
 import re
@@ -77,7 +77,7 @@ def _set_attrib(one_elem, color='#000000'):
 
 
 def _insert_shape(x, y, shape_w_rotation, final_svg, style_dict='default',
-                                         color='#000000', block_scale=1.0):
+                  color='#000000', block_scale=1.0):
     '''
         Inserts svg shape in the appropiate place, with selected style
         and fill color
@@ -106,16 +106,16 @@ def _insert_shape(x, y, shape_w_rotation, final_svg, style_dict='default',
 
     translate = "translate( %(x)s %(y)s )" % \
                 {
-                  'x': str((x * block_size) + bound),
-                  'y': str((y * block_size) + bound)
+                    'x': str((x * block_size) + bound),
+                    'y': str((y * block_size) + bound)
                 }
 
     if int(rotation) != 0:
         rotate = "rotate(%(angle)s, %(center)s, %(center)s)" % \
-                {
-                 'angle': str(rotation),
-                 'center': str((float(block_size) / 2))
-                }
+                 {
+                     'angle': str(rotation),
+                     'center': str((float(block_size) / 2))
+                 }
         translate = translate + " " + rotate
 
     if block_scale != 1 and block_scale > 0:
@@ -130,10 +130,9 @@ def _insert_shape(x, y, shape_w_rotation, final_svg, style_dict='default',
 
 
 def _one_touching(top_left=False, top_center=False, top_right=False,
-                   middle_left=False, middle_right=False,
-                   bottom_left=False, bottom_center=False,
-                   bottom_right=False):
-
+                  middle_left=False, middle_right=False,
+                  bottom_left=False, bottom_center=False,
+                  bottom_right=False):
     # First the cross
     if top_center:
         return ('1b.svg', 0)
@@ -162,7 +161,6 @@ def _two_touching(top_left=False, top_center=False, top_right=False,
                   middle_left=False, middle_right=False,
                   bottom_left=False, bottom_center=False,
                   bottom_right=False):
-
     # First the cross
     if top_center and bottom_center:
         return ('1b3b.svg', 0)
@@ -198,7 +196,6 @@ def _three_touching(top_left=False, top_center=False, top_right=False,
                     middle_left=False, middle_right=False,
                     bottom_left=False, bottom_center=False,
                     bottom_right=False):
-
     # First the cross
     if middle_left and top_center and middle_right:
         return ('2a1b2c.svg', 0)
@@ -239,13 +236,12 @@ def _four_touching(top_left=False, top_center=False, top_right=False,
                    middle_left=False, middle_right=False,
                    bottom_left=False, bottom_center=False,
                    bottom_right=False):
-
-    #return ('2b.svg')
+    # return ('2b.svg')
     cross = [top_center, middle_right, bottom_center, middle_left]
     diagonals = [top_left, top_right, bottom_right, bottom_left]
 
     if cross.count(True) == 4:
-        #Complete cross
+        # Complete cross
         return ('2a1b2c3b.svg', 0)
     if diagonals.count(True) == 4:
         # Just for completeness, all diagonals
@@ -282,7 +278,6 @@ def _5plus_touching(top_left=False, top_center=False, top_right=False,
                     middle_left=False, middle_right=False,
                     bottom_left=False, bottom_center=False,
                     bottom_right=False):
-
     cross = [top_center, middle_right, bottom_center, middle_left]
 
     if cross.count(True) == 4:
@@ -316,7 +311,7 @@ def _5plus_touching(top_left=False, top_center=False, top_right=False,
                              bottom_center=bottom_center,
                              bottom_right=False)
 
-    raise Exception('Five or more touching node, none in cross section,' +\
+    raise Exception('Five or more touching node, none in cross section,' + \
                     'impossible')
 
 
@@ -324,7 +319,6 @@ def _choose_module(top_left=False, top_center=False, top_right=False,
                    middle_left=False, middle_right=False,
                    bottom_left=False, bottom_center=False,
                    bottom_right=False):
-
     how_many = [top_left, top_center, top_right, middle_left, middle_right,
                 bottom_left, bottom_center, bottom_right].count(True)
 
@@ -444,11 +438,11 @@ def _within_inner_eye(row, column, qr_size):
         # In top left inner eye
         return True
     if row >= qr_size - 6 and row <= qr_size - 3 and column >= 2 \
-                                                    and column <= 4:
+            and column <= 4:
         # In the bottom left inner eye
         return True
     if row >= 2 and row <= 4 and column >= (qr_size - 6) \
-                                        and column <= (qr_size - 3):
+            and column <= (qr_size - 3):
         # In the top right inner eye
         return True
     return False
@@ -468,10 +462,9 @@ def _is_inner_eye_position(row, column, qr_size):
 
 
 def _qrcode_to_svg(qrcode, style='default', style_color='#000000',
-                    inner_eye_style='default', inner_eye_color='#000000',
-                    outer_eye_style='default', outer_eye_color='#000000',
-                    bg_color='#FFFFFF', size=200):
-
+                   inner_eye_style='default', inner_eye_color='#000000',
+                   outer_eye_style='default', outer_eye_color='#000000',
+                   bg_color='#FFFFFF', size=200):
     style_dict = None
     inner_eyes_dict = None
     outer_eyes_dict = None
@@ -482,16 +475,16 @@ def _qrcode_to_svg(qrcode, style='default', style_color='#000000',
     if inner_eye_style:
         inner_eyes_dict = _get_eyes_dict(inner_eye_style)
 
-    module_count = qrcode.getModuleCount()   # Number of rows/columns of the QR
+    module_count = qrcode.getModuleCount()  # Number of rows/columns of the QR
     # size             scale
     # 10px               1
     # new_block_size     x
     new_block_size = float(size) / (module_count + (QUIET_ZONE * 2))
     block_scale = new_block_size / BLOCK_SIZE
     # Width of the SVG QR code
-    #width = str((module_count + (QUIET_ZONE * 2)) * BLOCK_SIZE)
+    # width = str((module_count + (QUIET_ZONE * 2)) * BLOCK_SIZE)
     width = str(size)
-    height = width                          # Height of the SVG QR code
+    height = width  # Height of the SVG QR code
     svg_doc = et.Element('svg', width=width, height=height, version='1.1',
                          xmlns='http://www.w3.org/2000/svg')
 
@@ -517,7 +510,7 @@ def _qrcode_to_svg(qrcode, style='default', style_color='#000000',
 
             # Let's check if there's a style for outer eye and insert the shape
             if outer_eyes_dict and _is_outer_eye_position(row, column,
-                                                         module_count):
+                                                          module_count):
                 _insert_shape(column, row, ('outer.svg', 0), svg_doc,
                               style_dict=outer_eyes_dict,
                               color=outer_eye_color, block_scale=block_scale)
@@ -525,7 +518,7 @@ def _qrcode_to_svg(qrcode, style='default', style_color='#000000',
 
             # Let's check if there's a style for inner eye and insert the shape
             if inner_eyes_dict and _is_inner_eye_position(row, column,
-                                                         module_count):
+                                                          module_count):
                 _insert_shape(column, row, ('inner.svg', 0), svg_doc,
                               style_dict=inner_eyes_dict,
                               color=inner_eye_color, block_scale=block_scale)
@@ -578,7 +571,6 @@ def generate_QR_for_text(text, eclevel='Q', style='default',
                          inner_eye_color='#000000', outer_eye_style='default',
                          outer_eye_color='#000000', bg_color='#FFFFFF',
                          size=200, ec_level='Q'):
-
     ec_level_validation(ec_level)
     color_validation(style_color)
     color_validation(inner_eye_color)

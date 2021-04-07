@@ -1,10 +1,10 @@
 # coding: utf-8
 # (c) Copyright 2012 by Miguel Paolino <mpaolino@ideal.com.uy>
-from config import (INTERIOR_SMALL, INTERIOR_MEDIUM, INTERIOR_LARGE,
-                    EXTERIOR_SMALL, EXTERIOR_MEDIUM, EXTERIOR_LARGE,
-                    LOGO_IMAGE_PATH, LOGO_MARGIN, DASHFRAME_MARGIN,
-                    SCISSORS_IMAGE_PATH, PDF_CREATOR, PDF_AUTHOR,
-                    INSTRUCTIONS_IMAGE_PATH, INSTRUCTIONS_CENTER_OFFSET)
+from .config import (INTERIOR_SMALL, INTERIOR_MEDIUM, INTERIOR_LARGE,
+                     EXTERIOR_SMALL, EXTERIOR_MEDIUM, EXTERIOR_LARGE,
+                     LOGO_IMAGE_PATH, LOGO_MARGIN, DASHFRAME_MARGIN,
+                     SCISSORS_IMAGE_PATH, PDF_CREATOR, PDF_AUTHOR,
+                     INSTRUCTIONS_IMAGE_PATH, INSTRUCTIONS_CENTER_OFFSET)
 from . import qrsvg
 import cairosvg
 from reportlab.pdfgen import canvas
@@ -12,16 +12,17 @@ from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.colors import HexColor
 from .validation import (format_validation, application_validation,
-                        appsize_validation, language_validation,
-                        ec_level_validation, size_validation,
-                        style_validation, inner_eye_style_validation,
-                        outer_eye_style_validation)
+                         appsize_validation, language_validation,
+                         ec_level_validation, size_validation,
+                         style_validation, inner_eye_style_validation,
+                         outer_eye_style_validation)
 import io
 from PIL import Image
 # Monkey patch ReportLab
 # http://stackoverflow.com/questions/2227493/\
 # reportlab-and-python-imaging-library-images-from-memory-issue
 import reportlab.lib.utils
+
 reportlab.lib.utils.Image = Image
 
 
@@ -68,7 +69,7 @@ def _gen_pdf(qr_pil, instructions=True, bg_color='#FFFFFF', frame=True,
     imagereader = ImageReader(qr_pil)
     qr_canvas.drawImage(imagereader, qr_draw_x, qr_draw_y)
 
-    #Get logo dimentions and place it inside dashed frame
+    # Get logo dimentions and place it inside dashed frame
     if put_logo:
         logo = Image.open(LOGO_IMAGE_PATH)
         logo_width, logo_height = logo.size
@@ -77,7 +78,7 @@ def _gen_pdf(qr_pil, instructions=True, bg_color='#FFFFFF', frame=True,
         qr_canvas.drawImage(LOGO_IMAGE_PATH, x=logo_x, y=logo_y, mask='auto')
 
     if instructions:
-        #TODO: Paste the instructions in the PDF
+        # TODO: Paste the instructions in the PDF
         instructions = Image.open(INSTRUCTIONS_IMAGE_PATH)
         instruction_width, instruction_height = instructions.size
         inst_x = (page_width / 2) - INSTRUCTIONS_CENTER_OFFSET
@@ -98,7 +99,6 @@ def _generate_pil(text, size='100', ec_level='L', style='default',
                   style_color='#000000', inner_eye_style='default',
                   inner_eye_color='#000000', outer_eye_style='default',
                   outer_eye_color='#000000', bg_color='#FFFFFF'):
-
     generated_svg = qrsvg.generate_QR_for_text(text, size=size,
                                                ec_level=ec_level,
                                                style=style,
@@ -121,7 +121,6 @@ def _gen_filelike(text, language='es', size=150, ec_level='L', qr_format='PDF',
                   inner_eye_style='default', inner_eye_color='#000000',
                   outer_eye_style='default', outer_eye_color='#000000',
                   bg_color='#FFFFFF'):
-
     if qr_format == 'SVG':
         return qrsvg.generate_QR_for_text(text, size=size,
                                           ec_level=ec_level,
@@ -236,10 +235,10 @@ def generate_qr_file(text, language='es', qr_format='PDF', app='interior',
             ec_level = EXTERIOR_LARGE['error_correction']
             size = EXTERIOR_LARGE['size']
         else:
-            raise Exception('No app size defined for QR generation, ' +\
+            raise Exception('No app size defined for QR generation, ' + \
                             'looks like validation failed. Awkward!')
     else:
-        raise Exception('No app type defined for QR generation, looks like' +\
+        raise Exception('No app type defined for QR generation, looks like' + \
                         ' validation failed. Awkward!')
 
     return _gen_filelike(text, size=size, ec_level=ec_level,

@@ -1,12 +1,12 @@
 # coding: utf-8
 # (c) Copyright 2011 by Miguel Paolino <mpaolino@ideal.com.uy>
-from config import (INTERIOR_SMALL, INTERIOR_MEDIUM, INTERIOR_LARGE,
-                    EXTERIOR_SMALL, EXTERIOR_MEDIUM, EXTERIOR_LARGE,
-                    LOGO_MARGIN, EYE_STYLES_DIR, STYLES_DIR)
-from exceptions import (StyleMissing, InvalidColor, InvalidSize,
-                        InvalidApplication, InnerEyeStyleMissing,
-                        OuterEyeStyleMissing, InvalidSize,
-                        InvalidLanguage, InvalidEcLevel)
+from .config import (INTERIOR_SMALL, INTERIOR_MEDIUM, INTERIOR_LARGE,
+                     EXTERIOR_SMALL, EXTERIOR_MEDIUM, EXTERIOR_LARGE,
+                     LOGO_MARGIN, EYE_STYLES_DIR, STYLES_DIR)
+from .exceptions import (StyleMissing, InvalidColor, InvalidSize,
+                         InvalidApplication, InnerEyeStyleMissing,
+                         OuterEyeStyleMissing, InvalidSize,
+                         InvalidLanguage, InvalidEcLevel)
 
 import re
 from os.path import (join, isdir)
@@ -59,7 +59,7 @@ def ec_level_validation(ec_level):
     if not isinstance(ec_level, (str, bytes)) or \
             ec_level.upper() not in ('L', 'M', 'Q', 'H'):
         raise InvalidEcLevel('Unrecognized QR error correction'
-                        'level "%s"' % str(ec_level))
+                             'level "%s"' % str(ec_level))
     return True
 
 
